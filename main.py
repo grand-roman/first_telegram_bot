@@ -1,13 +1,20 @@
-from telegram import Bot
 import os
+
 from dotenv import load_dotenv
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+
 load_dotenv()
 
-bot = Bot(token=os.getenv('TOKEN'))
+updater = Updater(token=os.getenv('TOKEN'))
 
+def say_hi(bot, update):
+    bot.message.reply_text('Привет')
 
-chad_id = os.getenv('chad_id')
+def wake_up(bot, update):
+    bot.message.reply_text('Спасибо, что включили меня')
 
-text = 'срочно'
+updater.dispatcher.add_handler(CommandHandler('start', wake_up))
 
-bot.send_message(chad_id, text)
+updater.dispatcher.add_handler(MessageHandler(Filters.text, say_hi))
+
+updater.start_polling()
